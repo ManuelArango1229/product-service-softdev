@@ -1,24 +1,29 @@
-# SofDev API Gateway
+# SofDev Product Service
 
-Este es el **API Gateway** de **SofDev**, desarrollado con **Spring Cloud Gateway**. Su propósito es gestionar las solicitudes hacia los microservicios del ecosistema de SoftDev, actuando como un punto central de entrada para la comunicación entre clientes y servicios.
+Este es el **Product Service** de **SofDev**, desarrollado con **Spring Boot** y arquitectura **Hexagonal**. Su propósito es gestionar los productos dentro del ecosistema de SofDev, proporcionando endpoints para la creación, actualización y consulta de productos.
 
 ## 🚀 Tecnologías
 
 - **Java 21**
 - **Spring Boot 3.2.4**
-- **Spring Cloud Gateway**
+- **Arquitectura Hexagonal**
+- **MongoDB** (o el motor de base de datos que decidas usar)
 
 ## 📂 Estructura del Proyecto
 
 ```
-sofdev-api-gateway/
-├── src/main/java/com/sofdev/gateway
-│   ├── SofdevApiGatewayApplication.java
-│   ├── config/
-│   │   ├── RouteConfig.java
-│   │   ├── GlobalFilter.java
-│   │   └── SecurityConfig.java
-│   └── controllers/
+sofdev-product-service/
+├── src/main/java/com/sofdev/product
+│   ├── application/
+│   │   ├── usecases/
+│   │   ├── dtos/
+│   ├── domain/
+│   │   ├── model/
+│   │   ├── ports/
+│   ├── infrastructure/
+│   │   ├── adapters/
+│   │   ├── configuration/
+│   ├── SofdevProductServiceApplication.java
 ├── src/main/resources/
 │   ├── application.yml
 │   └── bootstrap.yml
@@ -28,22 +33,11 @@ sofdev-api-gateway/
 
 ## ⚙️ Configuración
 
-El API Gateway enruta solicitudes a los microservicios según `application.yml`:
+El servicio de productos utiliza `application.properties` para configurar la conexión a la base de datos y definir sus propiedades:
 
-```yaml
-spring:
-  cloud:
-    gateway:
-      routes:
-        - id: auth-service
-          uri: http://localhost:8081
-          predicates:
-            - Path=/auth/**
-
-        - id: users-service
-          uri: http://localhost:8082
-          predicates:
-            - Path=/users/**
+```
+  db_uri: mongodb://localhost:27017/sofdev-products
+  port: 8083
 ```
 
 ## 🏗️ Instalación y Ejecución
@@ -51,8 +45,8 @@ spring:
 ### 1️⃣ Clonar el repositorio
 
 ```sh
-git clone git@github.com:SofDev/sofdev-api-gateway.git
-cd sofdev-api-gateway
+git clone git@github.com:SofDev/sofdev-product-service.git
+cd sofdev-product-service
 ```
 
 ### 2️⃣ Construir el proyecto con Maven
@@ -61,7 +55,7 @@ cd sofdev-api-gateway
 ./mvnw clean install
 ```
 
-### 3️⃣ Ejecutar la API Gateway
+### 3️⃣ Ejecutar el Product Service
 
 ```sh
 ./mvnw spring-boot:run
