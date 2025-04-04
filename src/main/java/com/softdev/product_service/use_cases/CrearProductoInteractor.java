@@ -2,6 +2,7 @@ package com.softdev.product_service.use_cases;
 
 import com.softdev.product_service.domain.entities.Producto;
 import com.softdev.product_service.domain.repositories.ProductoRepositoryPort;
+import com.softdev.product_service.use_cases.dto.CrearProductoDTO;
 
 /**
  * Caso de uso que implementa la lógica de negocio para crear un nuevo producto.
@@ -30,7 +31,16 @@ public class CrearProductoInteractor {
      * @param producto El producto a crear
      * @return El producto creado con su identificador asignado
      */
-    public Producto execute(final Producto producto) {
-        return productoRepository.save(producto);
+    public Producto execute(final CrearProductoDTO producto) {
+        Producto createdProducto = productoRepository.findByNombre(producto.getNombre());
+        if (createdProducto != null) {
+            throw new IllegalArgumentException("El producto ya existe.");
+        }
+        return productoRepository.save(new Producto(
+                null,
+                producto.getNombre(),
+                producto.getPrecio(),
+                producto.getCategoria(),
+                producto.getStock()));
     }
 }

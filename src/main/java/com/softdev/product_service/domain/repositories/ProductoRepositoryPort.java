@@ -18,4 +18,12 @@ public interface ProductoRepositoryPort {
      * @return El producto encontrado o null si no existe.
      */
     Producto findById(String id);
+
+    /**
+     * Método para buscar un producto por su nombre en el repositorio.
+     *
+     * @param nombre El nombre del producto a buscar.
+     * @return El producto encontrado o null si no existe.
+     */
+    Producto findByNombre(String nombre);
 }
