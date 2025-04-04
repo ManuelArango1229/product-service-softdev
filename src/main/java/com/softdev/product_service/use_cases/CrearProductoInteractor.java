@@ -3,14 +3,34 @@ package com.softdev.product_service.use_cases;
 import com.softdev.product_service.domain.entities.Producto;
 import com.softdev.product_service.domain.repositories.ProductoRepositoryPort;
 
+/**
+ * Caso de uso que implementa la lógica de negocio para crear un nuevo producto.
+ * Esta clase sigue el patrón de diseño Interactor/Use Case de Clean
+ * Architecture.
+ */
 public class CrearProductoInteractor {
+    /**
+     * Puerto del repositorio de productos necesario para la persistencia.
+     */
     private final ProductoRepositoryPort productoRepository;
 
-    public CrearProductoInteractor(ProductoRepositoryPort productoRepository) {
-        this.productoRepository = productoRepository;
+    /**
+     * Constructor que recibe el puerto del repositorio de productos.
+     *
+     * @param productoRepositoryParam Implementación del puerto del repositorio de
+     *                                productos
+     */
+    public CrearProductoInteractor(final ProductoRepositoryPort productoRepositoryParam) {
+        this.productoRepository = productoRepositoryParam;
     }
 
-    public Producto execute(Producto producto) {
+    /**
+     * Ejecuta la lógica de negocio para crear un nuevo producto.
+     *
+     * @param producto El producto a crear
+     * @return El producto creado con su identificador asignado
+     */
+    public Producto execute(final Producto producto) {
         return productoRepository.save(producto);
     }
 }

@@ -11,10 +11,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class Producto {
-    /**
-     * Identificador único del producto.
-     */
-    private String id;
+
     /**
      * Nombre o descripción del producto.
      */
@@ -40,7 +37,6 @@ public class Producto {
      */
     public String toString() {
         return "Producto{"
-                + "id='" + id + '\''
                 + ", nombre='" + nombre + '\''
                 + ", precio=" + precio
                 + ", categoria='" + categoria + '\''
