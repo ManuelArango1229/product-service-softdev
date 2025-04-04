@@ -8,6 +8,9 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Entidad que representa un producto en la base de datos.
+ */
 @Entity
 @Table(name = "productos")
 @Data
@@ -36,11 +39,20 @@ public class ProductoEntity {
      */
     private int stock;
 
-    public ProductoEntity(String nombre, Double precio, String categoria, int stock) {
-        this.nombre = nombre;
-        this.precio = precio;
-        this.categoria = categoria;
-        this.stock = stock;
+    /**
+     * Constructor para crear una entidad de producto con todos los atributos.
+     *
+     * @param nombreParam    Nombre del producto
+     * @param precioParam    Precio del producto
+     * @param categoriaParam Categoría del producto
+     * @param stockParam     Cantidad disponible del producto
+     */
+    public ProductoEntity(final String nombreParam, final Double precioParam, final String categoriaParam,
+            final int stockParam) {
+        this.nombre = nombreParam;
+        this.precio = precioParam;
+        this.categoria = categoriaParam;
+        this.stock = stockParam;
     }
 
 }

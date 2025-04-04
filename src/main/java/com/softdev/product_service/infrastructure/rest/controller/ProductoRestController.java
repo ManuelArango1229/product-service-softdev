@@ -13,14 +13,32 @@ import com.softdev.product_service.use_cases.dto.CrearProductoDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Controlador REST que maneja las operaciones relacionadas con los productos.
+ * Este controlador se encarga de exponer los endpoints para la gestión de
+ * productos
+ * en la aplicación.
+ */
 @RequiredArgsConstructor
 @RequestMapping("registro")
 @RestController
 public class ProductoRestController {
+    /**
+     * Interactor encargado de la lógica de negocio para crear productos.
+     */
     private final CrearProductoInteractor crearProductoInteractor;
 
+    /**
+     * Endpoint para registrar un nuevo producto en el sistema.
+     *
+     * @param productoRequest El producto a registrar con sus datos validados
+     * @return ResponseEntity con el estado de la operación:
+     *         - HttpStatus.CREATED y mensaje de éxito si se registra correctamente
+     *         - HttpStatus.INTERNAL_SERVER_ERROR y mensaje de error en caso de
+     *         fallo
+     */
     @RequestMapping("producto")
-    public ResponseEntity<?> registrarProducto(@Valid @RequestBody Producto productoRequest) {
+    public ResponseEntity<?> registrarProducto(@Valid @RequestBody final Producto productoRequest) {
         try {
             CrearProductoDTO newProductoDTO = new CrearProductoDTO(
                     productoRequest.getNombre(),

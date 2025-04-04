@@ -1,5 +1,7 @@
 package com.softdev.product_service.use_cases;
 
+import org.springframework.stereotype.Component;
+
 import com.softdev.product_service.domain.entities.Producto;
 import com.softdev.product_service.domain.repositories.ProductoRepositoryPort;
 import com.softdev.product_service.use_cases.dto.CrearProductoDTO;
@@ -9,6 +11,7 @@ import com.softdev.product_service.use_cases.dto.CrearProductoDTO;
  * Esta clase sigue el patrón de diseño Interactor/Use Case de Clean
  * Architecture.
  */
+@Component
 public class CrearProductoInteractor {
     /**
      * Puerto del repositorio de productos necesario para la persistencia.
