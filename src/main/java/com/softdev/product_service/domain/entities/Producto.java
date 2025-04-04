@@ -14,7 +14,7 @@ public class Producto {
     /**
      * Identificador único del producto.
      */
-    private String id;
+    private Long id;
     /**
      * Nombre o descripción del producto.
      */
