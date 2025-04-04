@@ -1,5 +1,7 @@
 package com.softdev.product_service.use_cases;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import com.softdev.product_service.domain.entities.Producto;
@@ -35,9 +37,9 @@ public class CrearProductoInteractor {
      * @return El producto creado con su identificador asignado
      */
     public Producto execute(final CrearProductoDTO producto) {
-        Producto createdProducto = productoRepository.findByNombre(producto.getNombre());
-        if (createdProducto != null) {
-            throw new IllegalArgumentException("El producto ya existe.");
+        Optional<Producto> createdProducto = productoRepository.findByNombre(producto.getNombre());
+        if (createdProducto.isPresent()) {
+            throw new RuntimeException("El producto ya existe");
         }
         return productoRepository.save(new Producto(
                 null,

@@ -1,7 +1,5 @@
 package com.softdev.product_service.infrastructure.database.postgres.repositories;
 
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.softdev.product_service.infrastructure.database.postgres.entities.ProductoEntity;
@@ -17,5 +15,5 @@ public interface ProductosJpaRepository extends JpaRepository<ProductoEntity, Lo
      * @param nombre el nombre del producto a buscar
      * @return un Optional que contiene el producto si se encuentra, o vacío si no
      */
-    Optional<ProductoEntity> findByNombre(String nombre);
+    ProductoEntity findByNombre(String nombre);
 }

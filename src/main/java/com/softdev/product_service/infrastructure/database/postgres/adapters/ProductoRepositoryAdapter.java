@@ -1,5 +1,7 @@
 package com.softdev.product_service.infrastructure.database.postgres.adapters;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 import com.softdev.product_service.domain.entities.Producto;
@@ -46,10 +48,9 @@ public class ProductoRepositoryAdapter implements ProductoRepositoryPort {
      * @throws RuntimeException si el producto no existe
      */
     @Override
-    public Producto findById(final String id) {
-        return ProductoEntityMapper.toDomain(
-                productosJpaRepository.findById(Long.valueOf(id))
-                        .orElseThrow(() -> new RuntimeException("Producto no encontrado")));
+    public Optional<Producto> findById(final Long id) {
+        return Optional.ofNullable(productosJpaRepository.findById(id))
+                .map(productoEntity -> ProductoEntityMapper.toDomain(productoEntity.get()));
     }
 
     /**
@@ -60,10 +61,10 @@ public class ProductoRepositoryAdapter implements ProductoRepositoryPort {
      * @throws RuntimeException si el producto no existe
      */
     @Override
-    public Producto findByNombre(final String nombre) {
-        return ProductoEntityMapper.toDomain(
-                productosJpaRepository.findByName(nombre)
-                        .orElseThrow(() -> new RuntimeException("Producto no encontrado")));
+    public Optional<Producto> findByNombre(final String nombre) {
+        Optional<Producto> entiedad = Optional.ofNullable(productosJpaRepository.findByNombre(nombre)).map(
+                productoEntity -> ProductoEntityMapper.toDomain(productoEntity));
+        return entiedad;
     }
 
 }

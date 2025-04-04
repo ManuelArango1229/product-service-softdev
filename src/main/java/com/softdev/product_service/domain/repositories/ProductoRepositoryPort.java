@@ -1,5 +1,7 @@
 package com.softdev.product_service.domain.repositories;
 
+import java.util.Optional;
+
 import com.softdev.product_service.domain.entities.Producto;
 
 public interface ProductoRepositoryPort {
@@ -17,7 +19,7 @@ public interface ProductoRepositoryPort {
      * @param id El ID del producto a buscar.
      * @return El producto encontrado o null si no existe.
      */
-    Producto findById(String id);
+    Optional<Producto> findById(Long id);
 
     /**
      * Método para buscar un producto por su nombre en el repositorio.
@@ -25,5 +27,5 @@ public interface ProductoRepositoryPort {
      * @param nombre El nombre del producto a buscar.
      * @return El producto encontrado o null si no existe.
      */
-    Producto findByNombre(String nombre);
+    Optional<Producto> findByNombre(String nombre);
 }

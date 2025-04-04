@@ -1,5 +1,6 @@
 package com.softdev.product_service.infrastructure.database.postgres.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +26,7 @@ public class ProductoEntity {
     /**
      * Nombre o descripción del producto.
      */
+    @Column(unique = true, nullable = false)
     private String nombre;
     /**
      * Precio del producto en la moneda establecida.
