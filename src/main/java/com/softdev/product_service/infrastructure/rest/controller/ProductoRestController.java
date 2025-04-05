@@ -2,6 +2,7 @@ package com.softdev.product_service.infrastructure.rest.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,19 +38,16 @@ public class ProductoRestController {
      *         - HttpStatus.INTERNAL_SERVER_ERROR y mensaje de error en caso de
      *         fallo
      */
-    @RequestMapping("producto")
+    @PostMapping("producto")
     public ResponseEntity<?> registrarProducto(@Valid @RequestBody final Producto productoRequest) {
-        try {
-            CrearProductoDTO newProductoDTO = new CrearProductoDTO(
-                    productoRequest.getNombre(),
-                    productoRequest.getPrecio(),
-                    productoRequest.getCategoria(),
-                    productoRequest.getMarca(),
-                    productoRequest.getStock());
-            crearProductoInteractor.execute(newProductoDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Usuario registrado exitosamente.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al registrar el producto.");
-        }
+        CrearProductoDTO newProductoDTO = new CrearProductoDTO(
+            productoRequest.getNombre(),
+            productoRequest.getPrecio(),
+            productoRequest.getCategoria(),
+            productoRequest.getMarca(),
+            productoRequest.getStock());
+
+        crearProductoInteractor.execute(newProductoDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Producto registrado exitosamente.");
     }
 }
