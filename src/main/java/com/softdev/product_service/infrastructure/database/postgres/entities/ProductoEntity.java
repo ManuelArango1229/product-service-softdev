@@ -37,6 +37,10 @@ public class ProductoEntity {
      */
     private String categoria;
     /**
+     * Marca del producto.
+     */
+    private String marca;
+    /**
      * Cantidad disponible del producto en inventario.
      */
     private int stock;
@@ -47,13 +51,15 @@ public class ProductoEntity {
      * @param nombreParam    Nombre del producto
      * @param precioParam    Precio del producto
      * @param categoriaParam Categoría del producto
+     * @param marcaParam     Marca del producto
      * @param stockParam     Cantidad disponible del producto
      */
     public ProductoEntity(final String nombreParam, final Double precioParam, final String categoriaParam,
-            final int stockParam) {
+            final String marcaParam, final int stockParam) {
         this.nombre = nombreParam;
         this.precio = precioParam;
         this.categoria = categoriaParam;
+        this.marca = marcaParam;
         this.stock = stockParam;
     }
 

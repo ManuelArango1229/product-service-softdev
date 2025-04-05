@@ -46,6 +46,7 @@ public class CrearProductoInteractor {
                 producto.getNombre(),
                 producto.getPrecio(),
                 producto.getCategoria(),
+                producto.getMarca(),
                 producto.getStock()));
     }
 }

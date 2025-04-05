@@ -44,6 +44,7 @@ public class ProductoRestController {
                     productoRequest.getNombre(),
                     productoRequest.getPrecio(),
                     productoRequest.getCategoria(),
+                    productoRequest.getMarca(),
                     productoRequest.getStock());
             crearProductoInteractor.execute(newProductoDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body("Usuario registrado exitosamente.");

@@ -28,6 +28,10 @@ public class Producto {
      */
     private String categoria;
     /**
+     * Marca del producto.
+     */
+    private String marca;
+    /**
      * Cantidad disponible del producto en inventario.
      */
     private int stock;
@@ -44,6 +48,7 @@ public class Producto {
                 + ", nombre='" + nombre + '\''
                 + ", precio=" + precio
                 + ", categoria='" + categoria + '\''
+                + ", marca='" + marca + '\''
                 + ", stock=" + stock
                 + '}';
     }

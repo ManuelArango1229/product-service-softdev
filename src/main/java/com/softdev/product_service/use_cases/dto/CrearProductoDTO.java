@@ -24,6 +24,10 @@ public class CrearProductoDTO {
      */
     private String categoria;
     /**
+     * Marca del producto.
+     */
+    private String marca;
+    /**
      * Cantidad disponible del producto en inventario.
      */
     private int stock;

@@ -24,6 +24,7 @@ public class ProductoEntityMapper {
                 producto.getNombre(),
                 producto.getPrecio(),
                 producto.getCategoria(),
+                producto.getMarca(),
                 producto.getStock());
     }
 
@@ -40,6 +41,7 @@ public class ProductoEntityMapper {
                 productoEntity.getNombre(),
                 productoEntity.getPrecio(),
                 productoEntity.getCategoria(),
+                productoEntity.getMarca(),
                 productoEntity.getStock());
     }
 }
