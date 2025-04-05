@@ -67,4 +67,27 @@ public class ProductoRepositoryAdapter implements ProductoRepositoryPort {
         return entiedad;
     }
 
+    /**
+     * Busca un producto por su nombre y un ID diferente.
+     *
+     * @param nombre El nombre del producto a buscar
+     * @param id     El ID del producto a excluir de la búsqueda
+     * @return El producto encontrado
+     * @throws RuntimeException si el producto no existe
+     */
+    @Override
+    public Optional<Producto> findByNombreAndIdNot(final String nombre, final Long id) {
+        return Optional.ofNullable(productosJpaRepository.findByNombreAndIdNot(nombre, id)).map(
+                productoEntity -> ProductoEntityMapper.toDomain(productoEntity));
+    }
+
+    /**
+     * Elimina un producto por su identificador.
+     *
+     * @param id El identificador del producto a eliminar
+     */
+    @Override
+    public void deleteById(final Long id) {
+        productosJpaRepository.deleteById(id);
+    }
 }

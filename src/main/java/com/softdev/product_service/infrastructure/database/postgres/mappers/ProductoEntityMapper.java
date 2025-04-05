@@ -20,12 +20,16 @@ public class ProductoEntityMapper {
      * @return Una nueva instancia de ProductoEntity con los datos del producto
      */
     public static ProductoEntity toEntity(final Producto producto) {
-        return new ProductoEntity(
-                producto.getNombre(),
-                producto.getPrecio(),
-                producto.getCategoria(),
-                producto.getMarca(),
-                producto.getStock());
+        ProductoEntity entity = new ProductoEntity();
+        if (producto.getId() != null) {
+            entity.setId(producto.getId());
+        }
+        entity.setNombre(producto.getNombre());
+        entity.setPrecio(producto.getPrecio());
+        entity.setCategoria(producto.getCategoria());
+        entity.setMarca(producto.getMarca());
+        entity.setStock(producto.getStock());
+        return entity;
     }
 
     /**

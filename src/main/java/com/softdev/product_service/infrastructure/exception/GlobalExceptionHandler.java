@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.softdev.product_service.domain.exceptions.DatosInvalidosException;
@@ -41,4 +43,20 @@ public class GlobalExceptionHandler {
                 .body(Map.of("error", ex.getMessage()));
     }
 
+        /**
+     * Manejador para errores de validación en los DTOs.
+     *
+     * @param ex excepción lanzada cuando falla @Valid
+     * @return mapa con errores por campo
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationErrors(final MethodArgumentNotValidException ex) {
+        Map<String, String> errores = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            String campo = ((FieldError) error).getField();
+            String mensaje = error.getDefaultMessage();
+            errores.put(campo, mensaje);
+        });
+        return ResponseEntity.badRequest().body(errores);
+    }
 }

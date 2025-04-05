@@ -16,4 +16,13 @@ public interface ProductosJpaRepository extends JpaRepository<ProductoEntity, Lo
      * @return un Optional que contiene el producto si se encuentra, o vacío si no
      */
     ProductoEntity findByNombre(String nombre);
+
+    /**
+     * Método para buscar un producto por su nombre y un ID diferente.
+     *
+     * @param nombre el nombre del producto a buscar
+     * @param id     el ID del producto a excluir de la búsqueda
+     * @return un Optional que contiene el producto si se encuentra, o vacío si no
+     */
+    ProductoEntity findByNombreAndIdNot(String nombre, Long id);
 }
