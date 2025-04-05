@@ -43,15 +43,27 @@ public class EditarProductoInteractor {
         Producto productoExistente = productoRepository.findById(dto.getId())
             .orElseThrow(() -> new ProductoNoEncontradoException("Producto no encontrado con ID " + dto.getId()));
 
-        if (productoRepository.findByNombreAndIdNot(dto.getNombre(), dto.getId()).isPresent()) {
-            throw new DatosInvalidosException("Ya existe otro producto con el nombre '" + dto.getNombre() + "'");
+        if (dto.getNombre() != null && !dto.getNombre().isBlank()) {
+            if (productoRepository.findByNombre(dto.getNombre()).isPresent()) {
+                throw new DatosInvalidosException("El nombre del producto ya existe.");
+            }
+            productoExistente.setNombre(dto.getNombre());
         }
-        productoExistente.setId(dto.getId());
-        productoExistente.setNombre(dto.getNombre());
-        productoExistente.setPrecio(dto.getPrecio());
-        productoExistente.setCategoria(dto.getCategoria());
-        productoExistente.setMarca(dto.getMarca());
-        productoExistente.setStock(dto.getStock());
+        if (dto.getNombre() != null) {
+            productoExistente.setNombre(dto.getNombre());
+        }
+        if (dto.getPrecio() != null) {
+            productoExistente.setPrecio(dto.getPrecio());
+        }
+        if (dto.getCategoria() != null) {
+            productoExistente.setCategoria(dto.getCategoria());
+        }
+        if (dto.getMarca() != null) {
+            productoExistente.setMarca(dto.getMarca());
+        }
+        if (dto.getStock() != null) {
+            productoExistente.setStock(dto.getStock());
+        }
 
         return productoRepository.save(productoExistente);
     }
@@ -65,23 +77,25 @@ public class EditarProductoInteractor {
     private void validarCampos(final EditarProductoDTO dto) {
         List<String> errores = new ArrayList<>();
 
-        if (dto.getNombre().isBlank()) {
+        if (dto.getNombre() != null && dto.getNombre().isBlank()) {
             errores.add("El nombre no puede estar vacío");
         }
-        if (dto.getPrecio() <= 0) {
+        if (dto.getPrecio() != null && dto.getPrecio() <= 0) {
             errores.add("El precio debe ser mayor a cero");
         }
-        if (dto.getCategoria().isBlank()) {
+        if (dto.getCategoria() != null && dto.getCategoria().isBlank()) {
             errores.add("La categoría no puede estar vacía");
         }
-        if (dto.getMarca().isBlank()) {
+        if (dto.getMarca() != null && dto.getMarca().isBlank()) {
             errores.add("La marca no puede estar vacía");
         }
         if (dto.getStock() < 0) {
             errores.add("El stock no puede ser negativo");
         }
+
         if (!errores.isEmpty()) {
             throw new DatosInvalidosException(String.join(", ", errores));
         }
     }
+
 }

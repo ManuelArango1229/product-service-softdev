@@ -59,7 +59,7 @@ public class ProductoRestController {
      *         - HttpStatus.INTERNAL_SERVER_ERROR y mensaje de error en caso de
      *         fallo
      */
-    @PostMapping("crear")
+    @PostMapping("registrar")
     public ResponseEntity<?> registrarProducto(@Valid @RequestBody final Producto productoRequest) {
         CrearProductoDTO newProductoDTO = new CrearProductoDTO(
             productoRequest.getNombre(),
@@ -76,14 +76,16 @@ public class ProductoRestController {
      *
      * @param request El objeto EditarProductoDTO que contiene los datos del
      *     * producto a editar
+     * @param id El ID del producto a editar
      * @return ResponseEntity con el estado de la operación:
      *     *         - HttpStatus.OK y el producto editado si se edita correctamente
      *     *         - HttpStatus.BAD_REQUEST y mensaje de error en caso de datos
      *     * inválidos
      */
-    @PutMapping("/actualizar")
-    public ResponseEntity<?> editarProducto(@Valid @RequestBody final EditarProductoDTO request) {
+    @PutMapping("/actualizar/{id}")
+    public ResponseEntity<?> editarProducto(@PathVariable final Long id, @RequestBody final EditarProductoDTO request) {
         try {
+            request.setId(id);
             Producto productoActualizado = editarProductoInteractor.execute(request);
 
             Map<String, Object> respuesta = new HashMap<>();
@@ -95,9 +97,7 @@ public class ProductoRestController {
         } catch (ProductoNoEncontradoException | DatosInvalidosException ex) {
             return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
         } catch (Exception ex) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "Error al editar el producto"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Error al editar el producto"));
         }
     }
 
@@ -118,7 +118,7 @@ public class ProductoRestController {
         } catch (ProductoNoEncontradoException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", ex.getMessage()));
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Error al eliminar el producto"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Error al eliminar el producto, verifique el ID"));
         }
     }
 

@@ -24,7 +24,7 @@ public class EliminarProductoInteractor {
      * @param id El ID del producto a eliminar
      * @throws ProductoNoEncontradoException si el producto no existe
      */
-    public void execute(Long id) {
+    public void execute(final Long id) {
         if (productoRepository.findById(id).isEmpty()) {
             throw new ProductoNoEncontradoException("Producto no encontrado con ID " + id);
         }
