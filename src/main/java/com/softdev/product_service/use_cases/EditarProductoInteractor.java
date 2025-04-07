@@ -11,7 +11,8 @@ import com.softdev.product_service.use_cases.dto.EditarProductoDTO;
 
 /**
  * Interactor para editar un producto existente en el sistema.
- * Este interactor se encarga de la lógica de negocio relacionada con la edición de
+ * Este interactor se encarga de la lógica de negocio relacionada con la edición
+ * de
  * productos.
  */
 @Component
@@ -26,11 +27,12 @@ public class EditarProductoInteractor {
      * Constructor que recibe el puerto del repositorio de productos.
      *
      * @param productoRepositoryPort Implementación del puerto del repositorio de
-     *                           productos
+     *                               productos
      */
     public EditarProductoInteractor(final ProductoRepositoryPort productoRepositoryPort) {
         this.productoRepository = productoRepositoryPort;
     }
+
     /**
      * Ejecuta la lógica de negocio para editar un producto existente.
      *
@@ -41,7 +43,7 @@ public class EditarProductoInteractor {
         validarCampos(dto);
 
         Producto productoExistente = productoRepository.findById(dto.getId())
-            .orElseThrow(() -> new ProductoNoEncontradoException("Producto no encontrado con ID " + dto.getId()));
+                .orElseThrow(() -> new ProductoNoEncontradoException("Producto no encontrado con ID " + dto.getId()));
 
         if (dto.getNombre() != null && !dto.getNombre().isBlank()) {
             if (productoRepository.findByNombre(dto.getNombre()).isPresent()) {
@@ -49,9 +51,7 @@ public class EditarProductoInteractor {
             }
             productoExistente.setNombre(dto.getNombre());
         }
-        if (dto.getNombre() != null) {
-            productoExistente.setNombre(dto.getNombre());
-        }
+
         if (dto.getPrecio() != null) {
             productoExistente.setPrecio(dto.getPrecio());
         }
@@ -89,7 +89,7 @@ public class EditarProductoInteractor {
         if (dto.getMarca() != null && dto.getMarca().isBlank()) {
             errores.add("La marca no puede estar vacía");
         }
-        if (dto.getStock() < 0) {
+        if (dto.getStock() != null && dto.getStock() < 0) {
             errores.add("El stock no puede ser negativo");
         }
 
