@@ -1,7 +1,8 @@
 package com.softdev.product_service.infrastructure.database.postgres.adapters;
 
 import java.util.Optional;
-
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 
 import com.softdev.product_service.domain.entities.Producto;
@@ -40,6 +41,25 @@ public class ProductoRepositoryAdapter implements ProductoRepositoryPort {
         return productoSaved;
     }
 
+    /**
+     * Busca productos por nombre, categoría y/o marca (filtros opcionales).
+     *
+     * @param nombre    parte del nombre (puede ser null o vacío)
+     * @param categoria categoría del producto (puede ser null o vacío)
+     * @param marca     marca del producto (puede ser null o vacío)
+     * @return lista de productos que coincidan con los filtros
+     */
+    @Override
+    public List<Producto> buscarPorFiltros(final String nombre, final String categoria, final String marca) {
+        String nombreVal = (nombre != null && !nombre.trim().isEmpty()) ? "%" + nombre + "%" : null;
+        String categoriaVal = (categoria != null && !categoria.trim().isEmpty()) ? "%" + categoria + "%" : null;
+        String marcaVal = (marca != null && !marca.trim().isEmpty()) ? "%" + marca + "%" : null;
+        return productosJpaRepository
+                .buscarPorFiltros(nombreVal, categoriaVal, marcaVal)
+                .stream()
+                .map(ProductoEntityMapper::toDomain)
+                .collect(Collectors.toList());
+    }
     /**
      * Busca un producto por su identificador.
      *

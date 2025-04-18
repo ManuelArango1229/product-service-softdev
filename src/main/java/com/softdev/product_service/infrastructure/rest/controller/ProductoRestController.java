@@ -3,19 +3,23 @@ package com.softdev.product_service.infrastructure.rest.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.softdev.product_service.domain.entities.Producto;
 import com.softdev.product_service.domain.exceptions.DatosInvalidosException;
 import com.softdev.product_service.domain.exceptions.ProductoNoEncontradoException;
+import com.softdev.product_service.use_cases.BuscarProductoInteractor;
 import com.softdev.product_service.use_cases.CrearProductoInteractor;
 import com.softdev.product_service.use_cases.EditarProductoInteractor;
 import com.softdev.product_service.use_cases.EliminarProductoInteractor;
@@ -49,6 +53,11 @@ public class ProductoRestController {
      * Interactor encargado de la lógica de negocio para eliminar productos.
      */
     private final EliminarProductoInteractor eliminarProductoInteractor;
+
+    /**
+     * Interactor encargado de la lógica de negocio para buscar productos.
+     */
+    private final BuscarProductoInteractor buscarProductoInteractor;
 
     /**
      * Endpoint para registrar un nuevo producto en el sistema.
@@ -123,6 +132,29 @@ public class ProductoRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Error al eliminar el producto, verifique el ID"));
         }
+    }
+
+    /**
+     * Endpoint que permite buscar productos por nombre, categoría y/o marca.
+     *
+     * @param nombre    filtro opcional por nombre (parcial, sin importar mayúsculas)
+     * @param categoria filtro opcional por categoría (parcial)
+     * @param marca     filtro opcional por marca (parcial)
+     * @return lista de productos encontrados o mensaje si no hay coincidencias
+     */
+    @GetMapping("buscar")
+    public ResponseEntity<?> buscarProductos(
+            @RequestParam(required = false) final String nombre,
+            @RequestParam(required = false) final String categoria,
+            @RequestParam(required = false) final String marca) {
+
+        List<Producto> resultados = buscarProductoInteractor.buscar(nombre, categoria, marca);
+
+        if (resultados.isEmpty()) {
+            return ResponseEntity.ok(Map.of("mensaje", "No se encontraron productos con los criterios proporcionados."));
+        }
+
+        return ResponseEntity.ok(resultados);
     }
 
 }
