@@ -162,10 +162,30 @@ public class ProductoRestController {
      * @param nombre nombre del producto a verificar
      * @return ResponseEntity con un mapa que indica si el producto existe o no
      */
-    @GetMapping("existe/{nombre}")
+    @GetMapping("/existe/{nombre}")
     public ResponseEntity<?> existeProducto(@PathVariable final String nombre) {
         boolean existe = buscarProductoInteractor.existe(nombre);
         return ResponseEntity.ok(Map.of("existe", existe));
     }
 
+    /**
+     * Endpoint que verifica el stock de un producto por su nombre.
+     * @param nombre nombre del producto a verificar
+     * @return ResponseEntity con un mapa que indica el stock del producto
+     */
+    @GetMapping("/stock/{nombre}")
+    public ResponseEntity<?> verificarStock(@PathVariable final String nombre) {
+        List<Producto> productosConStock = buscarProductoInteractor.buscarStock(nombre);
+
+        if (productosConStock.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Producto no encontrado o sin stock"));
+        }
+
+        Producto producto = productosConStock.get(0);
+        return ResponseEntity.ok(Map.of("stock", producto.getStock()));
+    }
+
+
+    // endpoint 
 }

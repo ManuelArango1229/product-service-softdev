@@ -51,4 +51,19 @@ public class BuscarProductoInteractor {
     public boolean existe(final String nombre) {
         return productoRepositoryPort.findByNombre(nombre).isPresent();
     }
+
+    /**
+     * Busca un producto por su nombre y verifica si tiene stock.
+     *
+     * @param nombre nombre del producto a buscar
+     * @return lista de productos encontrados con stock
+     *         (puede estar vacía si no hay stock o el producto no existe)
+     */
+    public List<Producto> buscarStock(final String nombre) {
+        return productoRepositoryPort.findByNombre(nombre)
+                .filter(p -> p.getStock() > 0)
+                .map(List::of)
+                .orElse(List.of());
+    }
+
 }
