@@ -142,7 +142,7 @@ public class ProductoRestController {
      * @param marca     filtro opcional por marca (parcial)
      * @return lista de productos encontrados o mensaje si no hay coincidencias
      */
-    @GetMapping("buscar")
+    @GetMapping("/buscar")
     public ResponseEntity<?> buscarProductos(
             @RequestParam(required = false) final String nombre,
             @RequestParam(required = false) final String categoria,
@@ -155,6 +155,17 @@ public class ProductoRestController {
         }
 
         return ResponseEntity.ok(resultados);
+    }
+
+    /**
+     * Endpoint que verifica si un producto existe por su nombre.
+     * @param nombre nombre del producto a verificar
+     * @return ResponseEntity con un mapa que indica si el producto existe o no
+     */
+    @GetMapping("existe/{nombre}")
+    public ResponseEntity<?> existeProducto(@PathVariable final String nombre) {
+        boolean existe = buscarProductoInteractor.existe(nombre);
+        return ResponseEntity.ok(Map.of("existe", existe));
     }
 
 }

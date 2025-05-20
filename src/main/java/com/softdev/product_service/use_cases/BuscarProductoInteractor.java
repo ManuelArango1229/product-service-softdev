@@ -41,4 +41,14 @@ public class BuscarProductoInteractor {
         System.out.println("marca: " + marca + " (" + (marca != null ? marca.getClass().getName() : "null") + ")");
         return productoRepositoryPort.buscarPorFiltros(nombre, categoria, marca);
     }
+
+    /**
+     * Busca un producto por su nombre y verifica si existe.
+     *
+     * @param nombre nombre del producto a buscar
+     * @return producto encontrado
+     */
+    public boolean existe(final String nombre) {
+        return productoRepositoryPort.findByNombre(nombre).isPresent();
+    }
 }
