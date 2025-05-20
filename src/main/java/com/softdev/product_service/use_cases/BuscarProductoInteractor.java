@@ -66,4 +66,16 @@ public class BuscarProductoInteractor {
                 .orElse(List.of());
     }
 
+    /**
+     * Busca un producto por su nombre y devuelve su precio.
+     *
+     * @param nombre nombre del producto a buscar
+     * @return precio del producto encontrado o null si no existe
+     */
+    public Double getPrecio(final String nombre) {
+        return productoRepositoryPort.findByNombre(nombre)
+                .map(Producto::getPrecio)
+                .orElse(null);
+    }
+
 }

@@ -212,4 +212,20 @@ public class ProductoRestController {
             return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
         }
     }
+
+    /**
+     * Endpoint que verifica el precio de un producto por su nombre.
+     * @param nombre nombre del producto a verificar
+     * @return ResponseEntity con un mapa que indica el precio del producto
+     *
+     */
+    @GetMapping("/precio/{nombre}")
+    public ResponseEntity<?> verificarPrecio(@PathVariable final String nombre) {
+        Double precio = buscarProductoInteractor.getPrecio(nombre);
+        if (precio == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Producto no encontrado"));
+        }
+        return ResponseEntity.ok(Map.of("precio", precio));
+    }
 }
