@@ -23,8 +23,12 @@ import com.softdev.product_service.use_cases.BuscarProductoInteractor;
 import com.softdev.product_service.use_cases.CrearProductoInteractor;
 import com.softdev.product_service.use_cases.EditarProductoInteractor;
 import com.softdev.product_service.use_cases.EliminarProductoInteractor;
+import com.softdev.product_service.use_cases.ActualizarStockInteractor;
+import com.softdev.product_service.use_cases.dto.ActualizarStockRequest;
 import com.softdev.product_service.use_cases.dto.CrearProductoDTO;
 import com.softdev.product_service.use_cases.dto.EditarProductoDTO;
+
+
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +62,11 @@ public class ProductoRestController {
      * Interactor encargado de la lógica de negocio para buscar productos.
      */
     private final BuscarProductoInteractor buscarProductoInteractor;
+
+    /**
+     * Interactor encargado de la lógica de negocio para actualizar stock de productos.
+     */
+    private final ActualizarStockInteractor actualizarStockInteractor;
 
     /**
      * Endpoint para registrar un nuevo producto en el sistema.
@@ -186,6 +195,21 @@ public class ProductoRestController {
         return ResponseEntity.ok(Map.of("stock", producto.getStock()));
     }
 
-
-    // endpoint 
+    /**
+     * Endpoint que actualiza el stock de un producto por su nombre.
+     * @param request objeto que contiene el nombre del producto y la cantidad a
+     *                actualizar
+     * @return ResponseEntity con un mapa que indica el resultado de la operación
+     */
+    @PutMapping("/stock/actualizar")
+    public ResponseEntity<?> actualizarStock(@Valid @RequestBody final ActualizarStockRequest request) {
+        try {
+            actualizarStockInteractor.actualizarStock(request.getNombre(), request.getCantidad());
+            return ResponseEntity.ok(Map.of("mensaje", "Stock actualizado correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
+        }
+    }
 }
