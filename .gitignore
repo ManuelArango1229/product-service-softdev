@@ -34,3 +34,5 @@ build/
 
 properties.secrets
 **/application-secrets.properties
+**/jwt-secret.properties
+**/jwt-secrets.properties

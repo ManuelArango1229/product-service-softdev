@@ -3,24 +3,32 @@ package com.softdev.product_service.infrastructure.rest.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.softdev.product_service.domain.entities.Producto;
 import com.softdev.product_service.domain.exceptions.DatosInvalidosException;
 import com.softdev.product_service.domain.exceptions.ProductoNoEncontradoException;
+import com.softdev.product_service.use_cases.BuscarProductoInteractor;
 import com.softdev.product_service.use_cases.CrearProductoInteractor;
 import com.softdev.product_service.use_cases.EditarProductoInteractor;
 import com.softdev.product_service.use_cases.EliminarProductoInteractor;
+import com.softdev.product_service.use_cases.ActualizarStockInteractor;
+import com.softdev.product_service.use_cases.dto.ActualizarStockRequest;
 import com.softdev.product_service.use_cases.dto.CrearProductoDTO;
 import com.softdev.product_service.use_cases.dto.EditarProductoDTO;
+
+
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +57,16 @@ public class ProductoRestController {
      * Interactor encargado de la lógica de negocio para eliminar productos.
      */
     private final EliminarProductoInteractor eliminarProductoInteractor;
+
+    /**
+     * Interactor encargado de la lógica de negocio para buscar productos.
+     */
+    private final BuscarProductoInteractor buscarProductoInteractor;
+
+    /**
+     * Interactor encargado de la lógica de negocio para actualizar stock de productos.
+     */
+    private final ActualizarStockInteractor actualizarStockInteractor;
 
     /**
      * Endpoint para registrar un nuevo producto en el sistema.
@@ -125,4 +143,89 @@ public class ProductoRestController {
         }
     }
 
+    /**
+     * Endpoint que permite buscar productos por nombre, categoría y/o marca.
+     *
+     * @param nombre    filtro opcional por nombre (parcial, sin importar mayúsculas)
+     * @param categoria filtro opcional por categoría (parcial)
+     * @param marca     filtro opcional por marca (parcial)
+     * @return lista de productos encontrados o mensaje si no hay coincidencias
+     */
+    @GetMapping("/buscar")
+    public ResponseEntity<?> buscarProductos(
+            @RequestParam(required = false) final String nombre,
+            @RequestParam(required = false) final String categoria,
+            @RequestParam(required = false) final String marca) {
+
+        List<Producto> resultados = buscarProductoInteractor.buscar(nombre, categoria, marca);
+
+        if (resultados.isEmpty()) {
+            return ResponseEntity.ok(Map.of("mensaje", "No se encontraron productos con los criterios proporcionados."));
+        }
+
+        return ResponseEntity.ok(resultados);
+    }
+
+    /**
+     * Endpoint que verifica si un producto existe por su nombre.
+     * @param nombre nombre del producto a verificar
+     * @return ResponseEntity con un mapa que indica si el producto existe o no
+     */
+    @GetMapping("/existe/{nombre}")
+    public ResponseEntity<?> existeProducto(@PathVariable final String nombre) {
+        boolean existe = buscarProductoInteractor.existe(nombre);
+        return ResponseEntity.ok(Map.of("existe", existe));
+    }
+
+    /**
+     * Endpoint que verifica el stock de un producto por su nombre.
+     * @param nombre nombre del producto a verificar
+     * @return ResponseEntity con un mapa que indica el stock del producto
+     */
+    @GetMapping("/stock/{nombre}")
+    public ResponseEntity<?> verificarStock(@PathVariable final String nombre) {
+        List<Producto> productosConStock = buscarProductoInteractor.buscarStock(nombre);
+
+        if (productosConStock.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Producto no encontrado o sin stock"));
+        }
+
+        Producto producto = productosConStock.get(0);
+        return ResponseEntity.ok(Map.of("stock", producto.getStock()));
+    }
+
+    /**
+     * Endpoint que actualiza el stock de un producto por su nombre.
+     * @param request objeto que contiene el nombre del producto y la cantidad a
+     *                actualizar
+     * @return ResponseEntity con un mapa que indica el resultado de la operación
+     */
+    @PutMapping("/stock/actualizar")
+    public ResponseEntity<?> actualizarStock(@Valid @RequestBody final ActualizarStockRequest request) {
+        try {
+            actualizarStockInteractor.actualizarStock(request.getNombre(), request.getCantidad());
+            return ResponseEntity.ok(Map.of("mensaje", "Stock actualizado correctamente"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
+        }
+    }
+
+    /**
+     * Endpoint que verifica el precio de un producto por su nombre.
+     * @param nombre nombre del producto a verificar
+     * @return ResponseEntity con un mapa que indica el precio del producto
+     *
+     */
+    @GetMapping("/precio/{nombre}")
+    public ResponseEntity<?> verificarPrecio(@PathVariable final String nombre) {
+        Double precio = buscarProductoInteractor.getPrecio(nombre);
+        if (precio == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "Producto no encontrado"));
+        }
+        return ResponseEntity.ok(Map.of("precio", precio));
+    }
 }
