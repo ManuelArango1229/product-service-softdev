@@ -1,10 +1,20 @@
 package com.softdev.product_service.domain.repositories;
 
 import java.util.Optional;
-
+import java.util.List;
 import com.softdev.product_service.domain.entities.Producto;
 
 public interface ProductoRepositoryPort {
+    /**
+    * Busca productos por nombre o categoría.
+    *
+    * @param nombre    nombre del producto
+    * @param categoria categoría del producto
+    * @param marca     marca del producto
+    * @return lista de productos que coinciden con los parámetros
+    */
+    List<Producto> buscarPorFiltros(String nombre, String categoria, String marca);
+
     /**
      * Método para guardar un producto en el repositorio.
      *
